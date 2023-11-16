@@ -1,0 +1,41 @@
+---
+title: "Introduction to the binosim R Package"
+author: "By Amrit Tiwana"
+format:
+  revealjs:
+    slide-number: true
+    theme: default
+    embed-resources: true
+editor: visual
+menu:
+      side: right
+      width: wide
+---
+
+## Table of Contents
+
+-   Overview of binosim R package
+
+-   Benefits of using binosim
+
+-   Example of using binosim
+
+## What is binosim?
+
+An R package that returns a data frame of binary data from sample size, probability of x, baseline probability of Y, and the true odds ratio.
+
+It allows you to explore how changes in sample size, baseline probabilities, and effect sizes impact the results of statistical analyses.
+
+## binosim Function
+
+```{r}
+#| echo: true
+binosim <- function(n, px, baselineprob, or) {
+  x <- rbinom(n, size = 1, prob = px)
+  log_odds <- baselineprob + log(or) * x
+  py <- exp(log_odds) / (1 + exp(log_odds))
+  y <- rbinom(n, size = 1, prob = py)
+  dat <- data.frame(y = y, x = x)
+  return(dat)
+}
+```
