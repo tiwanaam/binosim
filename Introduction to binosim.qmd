@@ -22,7 +22,25 @@ menu:
 
 ## What is binosim?
 
-An R package that returns a data frame of binary data from sample size, probability of x, baseline probability of Y, and the true odds ratio.
+An R package that returns a data frame of X and Y binary data based on parameters from a logistic regression model.
+
+### Arguments
+
+|            |                            |
+|------------|----------------------------|
+| `n`        | Sample size.               |
+| `px`       | Probability of x.          |
+| `baseprob` | Baseline probability of Y. |
+| `or`       | True odds ratio.           |
+
+```{r}
+#| echo: true
+library(binosim)
+sim_data <- binosim(n = 10, px = 0.5, baseprob = 0.3, or = 2)
+sim_data
+```
+
+## Why use binosim?
 
 It allows you to explore how changes in sample size, baseline probabilities, and effect sizes impact the results of statistical analyses.
 
@@ -51,4 +69,21 @@ binosim <- function(n, px, baseprob, or) {
 
 ## Example of binosim in a Simulation Study
 
-
+```{r}
+#| echo: true
+# Running a Simulation Study
+simnum <- 10 # number of iterations to run in the simulation
+# empty vectors to store the values
+unadj.or <- unadj.se <- unadj.p <- rep(NA, simnum)
+for(s in 1:simnum){
+  # generate data by setting simulation parameters
+  sim_data <- binosim(n = 100000, px = 0.5, baseprob = 0.3, or = 2)
+  # fit unadjusted logistic regression model
+  unadj.mod <- glm(y ~ x, data = sim_data, family = "binomial")
+  unadj.coef <- summary(unadj.mod)$coef
+  # save coefficient ests, SEs, and p-values for coffee from both models in a vector
+  unadj.or[s] <- exp(unadj.coef[2,1])
+  unadj.se[s] <- unadj.coef[2,2]
+  unadj.p[s] <- unadj.coef[2,4]
+}
+```

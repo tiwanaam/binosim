@@ -29,4 +29,3 @@ binosim <- function(n, px, baseprob, or) {
   # Return the simulated data
   return(dat)
 }
-

@@ -1228,20 +1228,91 @@ By Amrit Tiwana
 </section>
 <section id="what-is-binosim" class="slide level2">
 <h2>What is binosim?</h2>
-<p>An R package that returns a data frame of binary data from sample size, probability of x, baseline probability of Y, and the true odds ratio.</p>
+<p>An R package that returns a data frame of X and Y binary data based on parameters from a logistic regression model.</p>
+<h3 id="arguments">Arguments</h3>
+<table>
+<tbody>
+<tr class="odd">
+<td><code>n</code></td>
+<td>Sample size.</td>
+</tr>
+<tr class="even">
+<td><code>px</code></td>
+<td>Probability of x.</td>
+</tr>
+<tr class="odd">
+<td><code>baseprob</code></td>
+<td>Baseline probability of Y.</td>
+</tr>
+<tr class="even">
+<td><code>or</code></td>
+<td>True odds ratio.</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(binosim)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>sim_data <span class="ot">&lt;-</span> <span class="fu">binosim</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">px =</span> <span class="fl">0.5</span>, <span class="at">baseprob =</span> <span class="fl">0.3</span>, <span class="at">or =</span> <span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>sim_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   y x
+1  0 0
+2  0 1
+3  1 1
+4  0 0
+5  0 0
+6  1 0
+7  1 1
+8  1 1
+9  0 0
+10 1 1</code></pre>
+</div>
+</div>
+</section>
+<section id="why-use-binosim" class="slide level2">
+<h2>Why use binosim?</h2>
 <p>It allows you to explore how changes in sample size, baseline probabilities, and effect sizes impact the results of statistical analyses.</p>
 </section>
 <section id="binosim-function" class="slide level2">
 <h2>binosim Function</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>binosim <span class="ot">&lt;-</span> <span class="cf">function</span>(n, px, baselineprob, or) {</span>
-<span id="cb1-2"><a href="#cb1-2"></a>  x <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> px)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  log_odds <span class="ot">&lt;-</span> baselineprob <span class="sc">+</span> <span class="fu">log</span>(or) <span class="sc">*</span> x</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  py <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_odds) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(log_odds))</span>
-<span id="cb1-5"><a href="#cb1-5"></a>  y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> py)</span>
-<span id="cb1-6"><a href="#cb1-6"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> y, <span class="at">x =</span> x)</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="fu">return</span>(dat)</span>
-<span id="cb1-8"><a href="#cb1-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Simulate binary data from simple logistic regression</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>binosim <span class="ot">&lt;-</span> <span class="cf">function</span>(n, px, baseprob, or) {</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="co"># Generate predictor variable X from a binomial distribution</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  x <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> px)</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="co"># Convert baseline probability to log-odds using the logit function</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  baseprob <span class="ot">&lt;-</span> <span class="fu">log</span>((baseprob) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> baseprob))</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="co"># Calculate the log-odds using baseline probability as the intercept</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  logodds <span class="ot">&lt;-</span> baseprob <span class="sc">+</span> <span class="fu">log</span>(or) <span class="sc">*</span> x</span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="co"># Calculate the probability of success for Y given the log-odds</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  py <span class="ot">&lt;-</span> <span class="fu">exp</span>(logodds) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(logodds))</span>
+<span id="cb3-11"><a href="#cb3-11"></a>  <span class="co"># Generate outcome variable Y from a binomial distribution</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>  y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> py)</span>
+<span id="cb3-13"><a href="#cb3-13"></a>  <span class="co"># Combine X and Y variables into a data frame</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y =</span> y, <span class="at">x =</span> x)</span>
+<span id="cb3-15"><a href="#cb3-15"></a>  <span class="co"># Return the simulated data</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>  <span class="fu">return</span>(dat)</span>
+<span id="cb3-17"><a href="#cb3-17"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="example-of-binosim-in-a-simulation-study" class="slide level2">
+<h2>Example of binosim in a Simulation Study</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Running a Simulation Study</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>simnum <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># number of iterations to run in the simulation</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># empty vectors to store the values</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>unadj.or <span class="ot">&lt;-</span> unadj.se <span class="ot">&lt;-</span> unadj.p <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, simnum)</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="cf">for</span>(s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>simnum){</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="co"># generate data by setting simulation parameters</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>  sim_data <span class="ot">&lt;-</span> <span class="fu">binosim</span>(<span class="at">n =</span> <span class="dv">100000</span>, <span class="at">px =</span> <span class="fl">0.5</span>, <span class="at">baseprob =</span> <span class="fl">0.3</span>, <span class="at">or =</span> <span class="dv">2</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="co"># fit unadjusted logistic regression model</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>  unadj.mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> sim_data, <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span>)</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  unadj.coef <span class="ot">&lt;-</span> <span class="fu">summary</span>(unadj.mod)<span class="sc">$</span>coef</span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="co"># save coefficient ests, SEs, and p-values for coffee from both models in a vector</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>  unadj.or[s] <span class="ot">&lt;-</span> <span class="fu">exp</span>(unadj.coef[<span class="dv">2</span>,<span class="dv">1</span>])</span>
+<span id="cb4-13"><a href="#cb4-13"></a>  unadj.se[s] <span class="ot">&lt;-</span> unadj.coef[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb4-14"><a href="#cb4-14"></a>  unadj.p[s] <span class="ot">&lt;-</span> unadj.coef[<span class="dv">2</span>,<span class="dv">4</span>]</span>
+<span id="cb4-15"><a href="#cb4-15"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="footer footer-default">
 
