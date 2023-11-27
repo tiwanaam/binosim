@@ -1,9 +1,11 @@
 #' @title Simulate binary data from logistic regression.
+#' @description
+#' A package that returns a dataframe of X and Y binary data based on logistic regression parameters.
 #' @param n Sample size.
 #' @param px Probability of x.
 #' @param baseprob Baseline probability of Y.
 #' @param or True odds ratio.
-#' @return A data frame with binary data
+#' @return A data frame with X and Y binary data
 #' @author Amrit Tiwana
 #' @examples
 #' sim_data <- binosim(n = 100000, px = 0.5, baseprob = 0.3, or = 2)
