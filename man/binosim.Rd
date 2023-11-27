@@ -4,14 +4,14 @@
 \alias{binosim}
 \title{Simulate binary data from logistic regression.}
 \usage{
-binosim(n, px, baselineprob, or)
+binosim(n, px, baseprob, or)
 }
 \arguments{
 \item{n}{Sample size.}
 
 \item{px}{Probability of x.}
 
-\item{baselineprob}{Baseline probability of Y.}
+\item{baseprob}{Baseline probability of Y.}
 
 \item{or}{True odds ratio.}
 }
@@ -22,7 +22,7 @@ A data frame with binary data
 Simulate binary data from logistic regression.
 }
 \examples{
-sim_data <- binosim(n = 10, px = 0.6, baselineprob = 1, or = 1)
+sim_data <- binosim(n = 100000, px = 0.5, baseprob = 0.3, or = 2)
 sim_data
 }
 \author{

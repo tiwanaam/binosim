@@ -10,3 +10,4 @@ library(testthat)
 library(binosim)
 
 test_check("binosim")
+
