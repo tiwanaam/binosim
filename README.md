@@ -1,20 +1,17 @@
 # The binosim R package
 
-This is an R package that returns a dataframe of X and Y binary data
-based on given logistic regression parameters.
+This is an R package that returns a dataframe of X and Y binary data based on given logistic regression parameters.
 
 ### How to Download the binosim Package in R
 
-Before you can download the 'binosim' package, install the 'devtools'
-package if you haven't already.
+Before you can download the 'binosim' package, install the 'devtools' package if you haven't already.
 
 ```{r}
 install.packages("devtools") 
 library(devtools)
 ```
 
-Once 'devtools' is installed, you can use it to install the 'binosim'
-package from GitHub.
+Once 'devtools' is installed, you can use it to install the 'binosim' package from GitHub.
 
 ```{r}
 devtools::install_github("tiwanaam/binosim")
@@ -28,11 +25,7 @@ library(binosim)
 
 ### Example of how to use the binosim package
 
-In this example, we will use the binosim package as part of a simulation
-study. We will simulate the data using 'binosim', fit a logistic
-regression model using the simulated data from the function, and assess
-the performance of the simulation in capturing the true odds ratios
-within the confidence intervals.
+In this example, we will use the binosim package as part of a simulation study. We will simulate the data using 'binosim', fit a logistic regression model using the simulated data from the function, and assess the performance of the simulation in capturing the true odds ratios within the confidence intervals.
 
 ```{r}
 # Set seed for reproducibility
@@ -69,7 +62,7 @@ Calculate the empirical coverage.
 ```{r}
 # Calculate empirical coverage
 coverage <- mean(in_ci)
-cat("Empirical Coverage:", coverage, "\n")
+coverage
 ```
 
 Plot the distribution of the estimated odds ratios.
