@@ -23,7 +23,7 @@ After installation, load the 'binosim' package.
 library(binosim)
 ```
 
-### Example of how to use the binosim package
+### Example of How to Use the binosim Package
 
 In this example, we will use the binosim package as part of a simulation study. We will simulate the data using 'binosim', fit a logistic regression model using the simulated data from the function, and assess the performance of the simulation in capturing the true odds ratios within the confidence intervals.
 
