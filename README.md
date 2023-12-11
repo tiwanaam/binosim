@@ -1,9 +1,3 @@
----
-editor_options:
-  markdown:
-    wrap: 72
----
-
 # The binosim R package
 
 This is an R package that returns a dataframe of X and Y binary data
