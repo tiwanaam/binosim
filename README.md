@@ -4,8 +4,6 @@ This is an R package that returns a data frame of X and Y binary data based on g
 
 ### R Installation Instructions
 
-Before you can download the 'binosim' package, install the 'devtools' package if you haven't already.
-
 ```{r}
 install.packages("devtools") 
 library(devtools)
@@ -50,16 +48,13 @@ for (s in 1:simnum) {
 Calculate the empirical coverage.
 
 ```{r}
-# Calculate empirical coverage
 coverage <- mean(in_ci)
 coverage
 ```
 
-Plot the distribution of the estimated odds ratios.
+Plot the distribution of the estimated odds ratios and add a vertical line for the true odds ratio.
 
 ```{r}
-# Plot the distribution of the estimated odds ratios
 hist(or, main = "Distribution of Odds Ratios", xlab = "Odds Ratio", col = "lightblue", border = "black")
-# Add a vertical line for the true odds ratio
 abline(v = true_or, col = "red", lty = 2, lwd = 3)
 ```
